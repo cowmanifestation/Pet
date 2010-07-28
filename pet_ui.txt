@@ -1,0 +1,49 @@
+PET UI
+
+upon starting up:
+
+Welcome to (pet program name).
+Please enter your name: xxx
+
+first-time owners:
+You have no pets.  Would you like to go to the shelter?(y/n)
+y
+At the shelter:
+
+Ollie: cat. Color: orange.  Age: 5. Breed: american short-hair Housetrained: y
+Rudy:  dog.  Color: brown. Age: 6 mos.  Breed: golden retriever / chocolate lab
+       Housetrained: n
+etc.
+
+Choose one by typing their name.
+
+(after pet chosen)
+Options: Rename, bring home
+
+(after brought home)
+narrative about pet exploring house
+"Your pet is curious.  She begins to sniff around the kitchen."
+"pet raises leg"
+etc.
+
+Options: move to litter box
+         take outside
+         pet
+         feed/water
+         reprimand
+         take to vet
+         walk
+         get another pet
+         etc.
+
+"Your pet peed on the couch.  Next time he/she raises leg, put him/her outside"
+                              or "Next time he/she squats, put him/her into the
+                              litter box."
+
+
+
+
+upon subsequent sign-ins:
+Welcome, please enter name or type "list" to view list of owners.
+=> xxx
+You have 3 pets: Ollie, 

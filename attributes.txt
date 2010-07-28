@@ -1,0 +1,73 @@
+PET ATTRIBUTES
+
+* weight
+* gender
+* housetrained (0..10)
+* name
+* type (cat/dog
+        breed)
+* age
+* health status: alive
+                 sick
+                 dead
+* happiness/affection towards owner
+
+PET ACTIONS
+
+* make sounds: angry
+               happy
+               afraid
+* squat/raise leg (prior to pooping/peeing)
+* poop/pee (more if fed more
+            at regular time intervals)
+* fight others
+* bite/scratch
+* get older
+* get sick
+* get injured
+* die
+* sleep (according to time interval)
+* get tired (if overstimulated)
+* jump onto table/couch/counter/bed etc.
+* get fat: if not walked
+                  let outside
+           if fed too much
+run away: if neglected
+          let outside too soon (for cats)
+
+OWNER ATTRIBUTES
+
+* name
+* pets
+
+OWNER ACTIONS
+
+* pet
+* feed/water
+* discipline/reprimand
+* potty train: when pet raises leg/squats, bring pet outside or to litter box
+* stop from fighting/ separate
+* walk
+* take to dog park
+* take swimming
+* give medicine
+* take to vet
+* get pet from shelter
+
+VET ACTIONS
+
+* examine
+* prescribe medicine
+* put to sleep
+
+ADMINISTRATIVE (PROGRAMMED) ACTIONS
+
+* Reprimand owner for neglecting pets
+* Time passes - assign actions to pets with passage of time
+* Warn owner when pet is sick or too fat or unhappy
+* Change pet's status: health
+                       happines
+                       age
+                       weight
+                       house trained
+
