@@ -20,26 +20,42 @@ class Pet
 
   attr_reader :name, :counter, :time_since_fed, :age
 
+  def at_count(num)
+    yield if counter == num
+  end
+
+  def at_interval(int)
+    yield if counter % int == 0
+  end
+
   def explore_house
-    if counter == 10
+    at_count(10) do
       puts "#{name} explores the house."
     end
   end
 
+  def feed
+    if File.exist?("FOOD")
+      @time_since_fed = 0
+      File.unlink("FOOD")
+      puts "#{name} is very happy to be fed"
+    end
+  end
+
   def yawn
-    if counter % 24 == 0
+    at_interval(24) do
       puts "#{name} yawns"
     end
   end
 
   def stretch
-    if counter % 26 == 0
+    at_interval(26) do
       puts "#{name} stretches"
     end
   end
 
   def pee
-    if counter % 40 == 0
+    at_interval(40) do
       unless time_since_fed > 80
         puts "#{name} pees"
       end
@@ -47,7 +63,7 @@ class Pet
   end
 
   def poop
-    if counter % 50 == 0
+    at_interval(50) do
       unless time_since_fed > 100
         puts "#{name} poops"
       end
@@ -61,29 +77,31 @@ class Pet
   end
 
   def express_extreme_hunger
-    if time_since_fed > 90 && counter % 8 == 0
-      puts "#{name} is very hungry!"
+    at_interval(8) do
+      if time_since_fed > 90
+        puts "#{name} is very hungry!"
+      end
     end
   end
 
   def die_of_hunger
     if time_since_fed > 160
       puts "#{name} has died of hunger."
-      break
+      exit
     end
   end
 
   def birthday
-    if counter % 600 == 0
-      pet_age += 1
-      puts "#{pet_name} is now #{age} years old"
+    at_interval(600) do
+      @age += 1
+      puts "#{name} is now #{age} years old"
     end
   end
 
   def die_of_old_age
-    if counter == 6000
+    at_count(3000) do
       puts "#{name} has died of old age"
-      break
+      exit
     end
   end
 
@@ -98,6 +116,7 @@ class Pet
     loop do
       @counter += 1
       @time_since_fed += 1
+      feed
 
       explore_house
 
