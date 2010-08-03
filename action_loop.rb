@@ -1,3 +1,4 @@
+
 =begin
 
 pet_type = %w[cat dog bird][rand(3)]
@@ -9,16 +10,21 @@ puts "Please enter #{pet_genders[rand(2)]} name: "
 pet_name = gets.chomp
 sleep 0.5
 =end
+require "pstore"
 
 class Pet
+
   def initialize(name)
     @name    = name
     @counter = 1
     @time_since_fed = 0
     @age = 0
+    @pstore = PStore.new("owner_actions.store")
+    @weight = 40
+    update_health(nil)
   end
 
-  attr_reader :name, :counter, :time_since_fed, :age
+  attr_reader :name, :counter, :time_since_fed, :age, :pstore, :weight
 
   def at_count(num)
     yield if counter == num
@@ -34,11 +40,20 @@ class Pet
     end
   end
 
-  def feed
-    if File.exist?("FOOD")
-      @time_since_fed = 0
-      File.unlink("FOOD")
-      puts "#{name} is very happy to be fed"
+  def check_for_food
+    pstore.transaction do
+      if pstore['food'] == true
+        if @time_since_fed < 54
+          @weight += 5
+          @time_since_fed = 0
+          pstore['food'] = false
+          puts "#{name} has eaten his food."
+        else
+          @time_since_fed = 0
+          pstore['food'] = false
+          puts "#{name} is very happy to be fed"
+        end
+      end
     end
   end
 
@@ -70,6 +85,18 @@ class Pet
     end
   end
 
+  def update_health(health_status)
+    pstore.transaction do
+      pstore['health'] = health_status
+    end
+  end
+
+  def weigh
+    at_interval(30) do
+      puts "#{name}'s weight is #{weight}"
+    end
+  end
+
   def express_hunger
     if time_since_fed == 56 || time_since_fed == 76
       puts "#{name} is hungry."
@@ -79,17 +106,30 @@ class Pet
   def express_extreme_hunger
     at_interval(8) do
       if time_since_fed > 90
+        @weight -= 1
         puts "#{name} is very hungry!"
       end
     end
   end
 
   def die_of_hunger
-    if time_since_fed > 160
+    if weight < 20 #time_since_fed > 160
+      update_health('dead')
       puts "#{name} has died of hunger."
       exit
     end
   end
+
+  def overweight
+    if weight > 70
+      puts "Your pet has died from being overweight."
+      update_health("dead")
+      exit
+    elsif weight > 55
+      puts "Your pet is overweight."
+    end
+  end
+     
 
   def birthday
     at_interval(600) do
@@ -100,6 +140,7 @@ class Pet
 
   def die_of_old_age
     at_count(3000) do
+      update_health('dead')
       puts "#{name} has died of old age"
       exit
     end
@@ -107,7 +148,7 @@ class Pet
 
   def next_tick
     puts "."
-    sleep 0.1
+    sleep 0.2
     @counter += 1
     @time_since_fed += 1
   end
@@ -116,7 +157,12 @@ class Pet
     loop do
       @counter += 1
       @time_since_fed += 1
-      feed
+
+      weigh
+
+      check_for_food
+
+      overweight
 
       explore_house
 
