@@ -7,6 +7,18 @@ class Owner
 
   attr_reader :pstore
 
+  def prompt_for_name
+    print "What would you like to name your pet? "
+    name = gets.chomp
+    name_pet(name)
+  end
+
+  def name_pet(name)
+    pstore.transaction do
+      pstore['name'] = name
+    end
+  end
+
   def feed
     pstore.transaction do
       pstore['food'] = true
@@ -27,6 +39,7 @@ class Owner
   end
 
   def prompt_for_action
+    prompt_for_name
     loop do
       print "What would you like to do for your pet? "
       action = gets.chomp
@@ -38,6 +51,8 @@ class Owner
 end
 
 mary = Owner.new
+mary.prompt_for_action
+
 Thread.new do
   loop do
     mary.check_pet_health
@@ -45,5 +60,4 @@ Thread.new do
   end
 end
 
-mary.prompt_for_action
 

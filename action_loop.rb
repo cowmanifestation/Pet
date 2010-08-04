@@ -14,8 +14,8 @@ require "pstore"
 
 class Pet
 
-  def initialize(name)
-    @name    = name
+  def initialize
+    @name    = "Your pet"
     @counter = 1
     @time_since_fed = 0
     @age = 0
@@ -25,6 +25,14 @@ class Pet
   end
 
   attr_reader :name, :counter, :time_since_fed, :age, :pstore, :weight
+
+  def named?
+    pstore.transaction do
+      if pstore['name']
+        @name = pstore['name']
+      end
+    end
+  end
 
   def at_count(num)
     yield if counter == num
@@ -116,6 +124,7 @@ class Pet
     if weight < 20 #time_since_fed > 160
       update_health('dead')
       puts "#{name} has died of hunger."
+      cleanup
       exit
     end
   end
@@ -124,6 +133,7 @@ class Pet
     if weight > 70
       puts "Your pet has died from being overweight."
       update_health("dead")
+      cleanup
       exit
     elsif weight > 55
       puts "Your pet is overweight."
@@ -142,6 +152,7 @@ class Pet
     at_count(3000) do
       update_health('dead')
       puts "#{name} has died of old age"
+      cleanup
       exit
     end
   end
@@ -153,10 +164,16 @@ class Pet
     @time_since_fed += 1
   end
 
+  def cleanup
+    File.delete("owner_actions.store")
+  end
+
   def come_to_life
     loop do
       @counter += 1
       @time_since_fed += 1
+
+      named?
 
       weigh
 
@@ -189,5 +206,5 @@ class Pet
   end
 end
 
-pet = Pet.new("Jesus")
+pet = Pet.new
 pet.come_to_life
